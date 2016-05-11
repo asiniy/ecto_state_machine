@@ -1,0 +1,6 @@
+%{"decimal": {:hex, :decimal, "1.1.2"},
+  "ecto": {:hex, :ecto, "1.0.7"},
+  "ex_machina": {:hex, :ex_machina, "0.6.1"},
+  "ex_spec": {:hex, :ex_spec, "1.0.0"},
+  "poolboy": {:hex, :poolboy, "1.5.1"},
+  "postgrex": {:hex, :postgrex, "0.9.1"}}
