@@ -77,9 +77,12 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 1. Test it: `mix test`
 1. Open new PR!
 
-## TODOS
+## TODOs
 
-- [ ] Cover by tests
+- [x] Cover by tests
 - [ ] Custom db column name
-- [ ] Circle CI
-- [ ] Introduce it at elixir-radar and my blog
+- [ ] Validation method for changeset indicates its value in the correct range
+- [ ] Initial value
+- [ ] CI
+- [ ] Add status? methods
+- [x] Introduce it at elixir-radar and my blog
