@@ -1,5 +1,6 @@
 defmodule EctoStateMachine do
   defmacro __using__(opts) do
+    repo   = Keyword.get(opts, :repo)
     states = Keyword.get(opts, :states)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
@@ -9,7 +10,7 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [states: states, events: events] do
+    quote bind_quoted: [states: states, events: events, repo: repo] do
       import Ecto.Changeset, only: [cast: 4]
 
       events
@@ -20,13 +21,13 @@ defmodule EctoStateMachine do
 
         def unquote(event[:name])(model) do
           unless :"#{model.state}" in unquote(event[:from]) do
-            raise "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
+            raise RuntimeError, "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
           end
 
           model
           |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
           |> unquote(event[:callback]).()
-          |> Oblako.Repo.update
+          |> unquote(repo).update
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do
