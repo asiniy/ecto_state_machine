@@ -26,7 +26,7 @@ defmodule EctoStateMachine.Mixfile do
 
   defp deps do
     [
-     {:ecto, "2.0.0-rc.5"},
+     {:ecto, ">= 1.1.2 or >= 2.0.0-beta0"},
 
      {:postgrex,   ">= 0.0.0", only: :test},
      {:ex_machina, "~> 1.0.0-beta.1", github: "thoughtbot/ex_machina", only: :test},
