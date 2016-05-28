@@ -24,10 +24,12 @@ defmodule EctoStateMachine do
             raise RuntimeError, "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
           end
 
-          model
-          |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
-          |> unquote(event[:callback]).()
-          |> unquote(repo).update
+          { :ok, new_model } = model
+            |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
+            |> unquote(event[:callback]).()
+            |> unquote(repo).update
+
+          new_model
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do

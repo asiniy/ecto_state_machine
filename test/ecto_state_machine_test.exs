@@ -16,7 +16,7 @@ defmodule EctoStateMachineTest do
 
   describe "events" do
     it "#confirm", context do
-      { :ok, model } = Dummy.User.confirm(context[:unconfirmed_user])
+      model = Dummy.User.confirm(context[:unconfirmed_user])
       assert model.state == "confirmed"
 
       assert_raise RuntimeError, "You can't move state from :confirmed to :confirmed", fn ->
@@ -33,10 +33,10 @@ defmodule EctoStateMachineTest do
     end
 
     it "#block", context do
-      { :ok, model } = Dummy.User.block(context[:confirmed_user])
+      model = Dummy.User.block(context[:confirmed_user])
       assert model.state == "blocked"
 
-      { :ok, model } = Dummy.User.block(context[:admin])
+      model = Dummy.User.block(context[:admin])
       assert model.state == "blocked"
 
       assert_raise RuntimeError, "You can't move state from :unconfirmed to :blocked", fn ->
@@ -49,7 +49,7 @@ defmodule EctoStateMachineTest do
     end
 
     it "#make_admin", context do
-      { :ok, model } = Dummy.User.make_admin(context[:confirmed_user])
+      model = Dummy.User.make_admin(context[:confirmed_user])
       assert model.state == "admin"
 
       assert_raise RuntimeError, "You can't move state from :unconfirmed to :admin", fn ->
