@@ -58,7 +58,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
   1. Add ecto_state_machine to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:ecto_state_machine, "~> 0.0.1"}]
+          [{:ecto_state_machine, "~> 0.0.4"}]
         end
 
   2. Ensure ecto_state_machine is started before your application:
