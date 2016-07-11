@@ -15,6 +15,7 @@ defmodule Dummy.User do
 
   use EctoStateMachine,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
+    initial: :unconfirmed,
     events: [
       [
         name:     :confirm,

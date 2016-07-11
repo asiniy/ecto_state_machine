@@ -2,6 +2,7 @@ defmodule EctoStateMachine do
   defmacro __using__(opts) do
     repo   = Keyword.get(opts, :repo)
     states = Keyword.get(opts, :states)
+    initial = Keyword.get(opts, :initial)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
         Keyword.put_new(event, :callback, quote do: fn(model) -> model end)
@@ -10,7 +11,7 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [states: states, events: events, repo: repo] do
+    quote bind_quoted: [states: states, events: events, repo: repo, initial: initial] do
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in states do
@@ -18,8 +19,9 @@ defmodule EctoStateMachine do
         end
 
         def unquote(event[:name])(model) do
-          unless :"#{model.state}" in unquote(event[:from]) do
-            raise RuntimeError, "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
+          state = state_with_initial(model.state)
+          unless :"#{state}" in unquote(event[:from]) do
+            raise RuntimeError, "You can't move state from :#{state || "nil"} to :#{unquote(event[:to])}"
           end
 
           model
@@ -36,9 +38,17 @@ defmodule EctoStateMachine do
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do
-          :"#{model.state}" in unquote(event[:from])
+          :"#{state_with_initial(model.state)}" in unquote(event[:from])
         end
       end)
+
+      defp state_with_initial(state) do
+        if :"#{state}" in unquote(states) do
+          state
+        else
+          unquote(initial)
+        end
+      end
     end
   end
 end
