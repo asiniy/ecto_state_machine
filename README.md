@@ -43,10 +43,12 @@ now you can run:
 
 ``` elixir
 user     = Dummy.Repo.get_by(Dummy.User, id: 1)
-new_user = Dummy.User.confirm(user)  # => transition user state to "confirmed". We can make him admin!
+new_user_changeset = Dummy.User.confirm(user)  # => Safe transition user state to "confirmed". We can make him admin!
+Dummy.Repo.update(new_user_changeset) # => Update manually
+new_user = Dummy.User.confirm!(user)  # => Or auto-transition user state to "confirmed". We can make him admin!
 Dummy.User.can_confirm?(new_user)    # => false
 Dummy.User.can_make_admin?(new_user) # => true
-Dummy.User.make_admin(new_user)
+Dummy.User.make_admin!(new_user)
 ```
 
 You can check out whole `test/dummy` directory to inspect how to organize sample app.
@@ -69,13 +71,12 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Contributions
 
+1. Clone repo: `git clone https://github.com/asiniy/ecto_state_machine.git`
+1. Open directory `cd ecto_state_machine`
 1. Install dependencies `mix deps.get`
-1. Setup your `config/test.exs` & `config/dev.exs`
-1. Run migrations `mix ecto.migrate` & `MIX_ENV=test mix ecto.migrate`
-1. Develop new feature
-1. Write new tests
 1. Test it: `mix test`
-1. Open new PR!
+
+Once you've made your additions and mix test passes, go ahead and open a PR!
 
 ## TODOs
 
