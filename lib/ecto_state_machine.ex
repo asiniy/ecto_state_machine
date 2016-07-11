@@ -42,6 +42,17 @@ defmodule EctoStateMachine do
         end
       end)
 
+      states
+      |> Enum.each(fn(state) ->
+        def unquote(:"#{state}?")(model) do
+          :"#{state_with_initial(model.state)}" == unquote(state)
+        end
+      end)
+
+      def unquote(:state)(model) do
+        "#{state_with_initial(model.state)}"
+      end
+
       defp state_with_initial(state) do
         if :"#{state}" in unquote(states) do
           state

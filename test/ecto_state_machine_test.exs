@@ -17,6 +17,75 @@ defmodule EctoStateMachineTest do
     }
   end
 
+  describe "states" do
+    context "without initial" do
+      it "#state", context do
+        state(context)
+        assert User.state(context[:initial_user])    == ""
+        assert User.state(context[:not_found_state]) == ""
+      end
+
+      it "#state?", context do
+        state?(context)
+        assert User.admin?(context[:initial_user])    == false
+        assert User.admin?(context[:not_found_state]) == false
+      end
+    end
+
+    context "with initial" do
+      it "#state", context do
+        state(context, UserWithInitial)
+        assert UserWithInitial.state(context[:initial_user])    == "admin"
+        assert UserWithInitial.state(context[:not_found_state]) == "admin"
+      end
+
+      it "#state?", context do
+        state?(context, UserWithInitial)
+        assert UserWithInitial.admin?(context[:initial_user])    == true
+        assert UserWithInitial.admin?(context[:not_found_state]) == true
+      end
+    end
+
+    defp state(context, model \\ User) do
+      assert model.state(context[:unconfirmed_user]) == "unconfirmed"
+      assert model.state(context[:confirmed_user])   == "confirmed"
+      assert model.state(context[:blocked_user])     == "blocked"
+      assert model.state(context[:admin])            == "admin"
+    end
+
+    defp state?(context, model \\ User) do
+      # Initial
+      assert model.unconfirmed?(context[:initial_user]) == false
+      assert model.confirmed?(context[:initial_user])   == false
+      assert model.blocked?(context[:initial_user])     == false
+
+      assert model.unconfirmed?(context[:not_found_state]) == false
+      assert model.confirmed?(context[:not_found_state])   == false
+      assert model.blocked?(context[:not_found_state])     == false
+
+      # All
+      assert model.unconfirmed?(context[:unconfirmed_user]) == true
+      assert model.unconfirmed?(context[:confirmed_user])   == false
+      assert model.unconfirmed?(context[:blocked_user])     == false
+      assert model.unconfirmed?(context[:admin])            == false
+
+      assert model.confirmed?(context[:unconfirmed_user]) == false
+      assert model.confirmed?(context[:confirmed_user])   == true
+      assert model.confirmed?(context[:blocked_user])     == false
+      assert model.confirmed?(context[:admin])            == false
+
+      assert model.blocked?(context[:unconfirmed_user]) == false
+      assert model.blocked?(context[:confirmed_user])   == false
+      assert model.blocked?(context[:blocked_user])     == true
+      assert model.blocked?(context[:admin])            == false
+
+      assert model.admin?(context[:unconfirmed_user]) == false
+      assert model.admin?(context[:confirmed_user])   == false
+      assert model.admin?(context[:blocked_user])     == false
+      assert model.admin?(context[:admin])            == true
+    end
+  end
+
   describe "events" do
     context "#confirm" do
       it "#confirm!", context do
