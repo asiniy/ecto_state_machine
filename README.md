@@ -69,13 +69,12 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Contributions
 
+1. Clone repo: `git clone https://github.com/asiniy/ecto_state_machine.git`
+1. Open directory `cd ecto_state_machine`
 1. Install dependencies `mix deps.get`
-1. Setup your `config/test.exs` & `config/dev.exs`
-1. Run migrations `mix ecto.migrate` & `MIX_ENV=test mix ecto.migrate`
-1. Develop new feature
-1. Write new tests
 1. Test it: `mix test`
-1. Open new PR!
+
+Once you've made your additions and mix test passes, go ahead and open a PR!
 
 ## TODOs
 

@@ -1,5 +1,5 @@
-defmodule Dummy.User do
-  use Dummy.Web, :model
+defmodule EctoStateMachine.User do
+  use Ecto.Schema
 
   use EctoStateMachine,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
@@ -19,7 +19,7 @@ defmodule Dummy.User do
         to:       :admin
       ]
     ],
-    repo: Dummy.Repo
+    repo: EctoStateMachine.TestRepo
 
   schema "users" do
     field :state, :string
