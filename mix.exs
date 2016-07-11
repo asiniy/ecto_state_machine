@@ -20,9 +20,9 @@ defmodule EctoStateMachine.Mixfile do
    ]
   end
 
-  defp elixirc_paths(:test), do: elixirc_paths ++ ["test/support", "test/dummy"]
-  defp elixirc_paths(_), do: elixirc_paths
-  defp elixirc_paths, do: ["lib"]
+  defp elixirc_paths(:test), do: elixirc_paths ++ ["test/support"]
+  defp elixirc_paths(_),     do: elixirc_paths
+  defp elixirc_paths,        do: ["lib"]
 
   def application do
     [
@@ -31,15 +31,15 @@ defmodule EctoStateMachine.Mixfile do
   end
 
   def app_list(:test), do: app_list ++ [:ecto, :postgrex, :ex_machina]
-  def app_list(_), do: app_list
-  def app_list, do: [:logger]
+  def app_list(_),     do: app_list
+  def app_list,        do: [:logger]
 
   defp deps do
     [
-     {:ecto, ">= 1.1.2 or >= 2.0.0"},
+     {:ecto, ">= 1.0.0 or >= 2.0.0"},
 
      {:postgrex,   ">= 0.0.0", only: :test},
-     {:ex_machina, "~> 1.0", github: "thoughtbot/ex_machina", only: :test},
+     {:ex_machina, "~> 1.0", only: :test},
      {:ex_spec,    "~> 1.1.0 or ~> 2.0.0", only: :test}
     ]
   end
