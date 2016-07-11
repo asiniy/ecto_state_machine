@@ -11,8 +11,6 @@ defmodule EctoStateMachine do
       end)
 
     quote bind_quoted: [states: states, events: events, repo: repo] do
-      import Ecto.Changeset, only: [cast: 4]
-
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in states do
@@ -24,9 +22,14 @@ defmodule EctoStateMachine do
             raise RuntimeError, "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
           end
 
-          { :ok, new_model } = model
-            |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
-            |> unquote(event[:callback]).()
+          model
+          |> Ecto.Changeset.cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
+          |> unquote(event[:callback]).()
+        end
+
+        def unquote(:"#{event[:name]}!")(model) do
+          { :ok, new_model } =
+            unquote(event[:name])(model)
             |> unquote(repo).update
 
           new_model

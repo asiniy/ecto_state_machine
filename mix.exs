@@ -36,7 +36,7 @@ defmodule EctoStateMachine.Mixfile do
 
   defp deps do
     [
-     {:ecto, ">= 1.1.2 or >= 2.0.0"},
+     {:ecto, ">= 1.0.0 or >= 2.0.0"},
 
      {:postgrex,   ">= 0.0.0", only: :test},
      {:ex_machina, "~> 1.0", only: :test},
