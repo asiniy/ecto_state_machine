@@ -1,5 +1,9 @@
-defmodule Dummy.User do
-  use Dummy.Web, :model
+defmodule EctoStateMachine.User do
+  use Ecto.Schema
+  import Ecto.Changeset, only: [cast: 4]
+
+  @required_params ~w()
+  @optional_params ~w(state confirmed_at)
 
   use EctoStateMachine,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
@@ -19,9 +23,15 @@ defmodule Dummy.User do
         to:       :admin
       ]
     ],
-    repo: Dummy.Repo
+    repo: EctoStateMachine.TestRepo
 
   schema "users" do
     field :state, :string
+    field :confirmed_at, Ecto.DateTime
+  end
+
+  def changeset(user, params \\ :empty) do
+    user
+    |> cast(params, @required_params, @optional_params)
   end
 end
