@@ -19,10 +19,7 @@ defmodule EctoStateMachine do
         end
 
         def unquote(event[:name])(model) do
-          state = state_with_initial(model.state)
-          unless :"#{state}" in unquote(event[:from]) do
-            raise RuntimeError, "You can't move state from :#{state || "nil"} to :#{unquote(event[:to])}"
-          end
+          validate_state_model(model, unquote(event))
 
           model
           |> Ecto.Changeset.cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
@@ -48,6 +45,21 @@ defmodule EctoStateMachine do
           :"#{state_with_initial(model.state)}" == unquote(state)
         end
       end)
+
+      defp unquote(:validate_state_model)(%Ecto.Changeset{} = cs, event) do
+        case cs do
+          %{ data:  model } -> _validate_state_field(model, event)
+          %{ model: model } -> _validate_state_field(model, event)
+        end
+      end
+      defp unquote(:validate_state_model)(model, event), do: _validate_state_field(model, event)
+
+      defp unquote(:_validate_state_field)(model, event) do
+        state = state_with_initial(model.state)
+        unless :"#{state}" in event[:from] do
+          raise RuntimeError, "You can't move state from :#{state || "nil"} to :#{event[:to]}"
+        end
+      end
 
       def unquote(:state)(model) do
         "#{state_with_initial(model.state)}"

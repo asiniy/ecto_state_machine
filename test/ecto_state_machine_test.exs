@@ -95,11 +95,23 @@ defmodule EctoStateMachineTest do
         check_confirm_errors(context)
       end
 
+      it "#confirm! with changeset", context do
+        model = User.changeset(context[:unconfirmed_user], %{confirmed_at: Ecto.DateTime.utc})
+        |> User.confirm!
+        assert model.state == "confirmed"
+      end
+
       it "#confirm", context do
         cs = User.confirm(context[:unconfirmed_user])
         assert cs.changes.state == "confirmed"
 
         check_confirm_errors(context, :confirm)
+      end
+
+      it "#confirm with changeset", context do
+        cs = User.changeset(context[:unconfirmed_user], %{confirmed_at: Ecto.DateTime.utc})
+        |> User.confirm
+        assert cs.changes.state == "confirmed"
       end
 
       defp check_confirm_errors(context, method \\ :confirm!) do
@@ -197,11 +209,27 @@ defmodule EctoStateMachineTest do
         check_admin_errors(context)
       end
 
+      it "#make_admin! with changeset", context do
+        date = Ecto.DateTime.utc
+        model = User.changeset(context[:confirmed_user], %{confirmed_at: date})
+        |> User.make_admin!
+        assert model.state        == "admin"
+        assert model.confirmed_at == date
+      end
+
       it "#make_admin", context do
         cs = User.make_admin(context[:confirmed_user])
         assert cs.changes.state == "admin"
 
         check_admin_errors(context, :make_admin)
+      end
+
+      it "#make_admin with changeset", context do
+        date = Ecto.DateTime.utc
+        cs = User.changeset(context[:confirmed_user], %{confirmed_at: date})
+        |> User.make_admin
+        assert cs.changes.state        == "admin"
+        assert cs.changes.confirmed_at == date
       end
 
       defp check_admin_errors(context, method \\ :make_admin!) do
