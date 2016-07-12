@@ -40,9 +40,13 @@ defmodule EctoStateMachine.Mixfile do
 
      {:postgrex,   ">= 0.0.0", only: :test},
      {:ex_machina, "~> 1.0", only: :test},
-     {:ex_spec,    "~> 1.1.0 or ~> 2.0.0", only: :test}
+     {:ex_spec,    ex_12_13("~> 1.1.0", "~> 2.0.0"), only: :test}
     ]
   end
+
+  defp ex_12_13(v12, v13), do: if ex_13, do: v13, else: v12
+
+  defp ex_13, do: Version.match?(System.version, ">= 1.3.0")
 
   defp package do
     [
