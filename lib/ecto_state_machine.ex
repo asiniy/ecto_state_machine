@@ -21,8 +21,7 @@ defmodule EctoStateMachine do
         def unquote(event[:name])(model) do
           validate_state_model(model, unquote(event))
 
-          model
-          |> Ecto.Changeset.cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
+          change_state(model, unquote(event[:to]))
           |> unquote(event[:callback]).()
         end
 
@@ -53,6 +52,15 @@ defmodule EctoStateMachine do
         end
       end
       defp unquote(:validate_state_model)(model, event), do: _validate_state_field(model, event)
+
+      defp unquote(:change_state)(%Ecto.Changeset{} = cs, event_to) do
+        cs
+        |> Ecto.Changeset.change(%{ state: "#{event_to}" })
+      end
+      defp unquote(:change_state)(model, event_to) do
+        model
+        |> Ecto.Changeset.cast(%{ state: "#{event_to}" }, ~w(state), ~w())
+      end
 
       defp unquote(:_validate_state_field)(model, event) do
         state = state_with_initial(model.state)
