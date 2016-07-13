@@ -1,6 +1,6 @@
-# EctoStateMachine
+# Ecto state machine
 
-This package allows to use [Finite state machine pattern](https://en.wikipedia.org/wiki/Finite-state_machine) in Ecto. Specify:
+This package allows to use [finite state machine pattern](https://en.wikipedia.org/wiki/Finite-state_machine) in Ecto. Specify:
 
 * states
 * events
