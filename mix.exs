@@ -39,7 +39,7 @@ defmodule EctoStateMachine.Mixfile do
      {:ecto, ">= 1.1.2 or >= 2.0.0"},
 
      {:postgrex,   ">= 0.0.0", only: :test},
-     {:ex_machina, "~> 1.0", github: "thoughtbot/ex_machina", only: :test},
+     {:ex_machina, "~> 1.0.0-beta1", github: "thoughtbot/ex_machina", only: :test},
      {:ex_spec,    "~> 1.1.0 or ~> 2.0.0", only: :test}
     ]
   end

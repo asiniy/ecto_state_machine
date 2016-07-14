@@ -1,6 +1,5 @@
 defmodule EctoStateMachine do
   defmacro __using__(opts) do
-    repo   = Keyword.get(opts, :repo)
     states = Keyword.get(opts, :states)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
@@ -10,7 +9,7 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [states: states, events: events, repo: repo] do
+    quote bind_quoted: [states: states, events: events] do
       import Ecto.Changeset, only: [cast: 4]
 
       events
@@ -24,12 +23,9 @@ defmodule EctoStateMachine do
             raise RuntimeError, "You can't move state from :#{model.state} to :#{unquote(event[:to])}"
           end
 
-          { :ok, new_model } = model
-            |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
-            |> unquote(event[:callback]).()
-            |> unquote(repo).update
-
-          new_model
+          model
+          |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
+          |> unquote(event[:callback]).()
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do

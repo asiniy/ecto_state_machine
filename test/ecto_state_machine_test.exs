@@ -16,8 +16,9 @@ defmodule EctoStateMachineTest do
 
   describe "events" do
     it "#confirm", context do
-      model = Dummy.User.confirm(context[:unconfirmed_user])
-      assert model.state == "confirmed"
+      changeset = Dummy.User.confirm(context[:unconfirmed_user])
+      assert changeset.changes.state     == "confirmed"
+      assert Map.keys(changeset.changes) == ~w(confirmed_at state)a
 
       assert_raise RuntimeError, "You can't move state from :confirmed to :confirmed", fn ->
         Dummy.User.confirm(context[:confirmed_user])
@@ -33,11 +34,13 @@ defmodule EctoStateMachineTest do
     end
 
     it "#block", context do
-      model = Dummy.User.block(context[:confirmed_user])
-      assert model.state == "blocked"
+      changeset = Dummy.User.block(context[:confirmed_user])
+      assert changeset.changes.state     == "blocked"
+      assert Map.keys(changeset.changes) == ~w(state)a
 
-      model = Dummy.User.block(context[:admin])
-      assert model.state == "blocked"
+      changeset = Dummy.User.block(context[:admin])
+      assert changeset.changes.state     == "blocked"
+      assert Map.keys(changeset.changes) == ~w(state)a
 
       assert_raise RuntimeError, "You can't move state from :unconfirmed to :blocked", fn ->
         Dummy.User.block(context[:unconfirmed_user])
@@ -49,8 +52,9 @@ defmodule EctoStateMachineTest do
     end
 
     it "#make_admin", context do
-      model = Dummy.User.make_admin(context[:confirmed_user])
-      assert model.state == "admin"
+      changeset = Dummy.User.make_admin(context[:confirmed_user])
+      assert changeset.changes.state     == "admin"
+      assert Map.keys(changeset.changes) == ~w(state)a
 
       assert_raise RuntimeError, "You can't move state from :unconfirmed to :admin", fn ->
         Dummy.User.make_admin(context[:unconfirmed_user])
