@@ -82,7 +82,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 - [x] Cover by tests
 - [ ] Custom db column name
-- [ ] Validation method for changeset indicates its value in the correct range
+- [x] Validation method for changeset indicates its value in the correct range
 - [ ] Initial value
 - [ ] CI
 - [x] Add status? methods
