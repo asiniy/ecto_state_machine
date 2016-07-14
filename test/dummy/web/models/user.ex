@@ -18,8 +18,7 @@ defmodule Dummy.User do
         from:     [:confirmed],
         to:       :admin
       ]
-    ],
-    repo: Dummy.Repo
+    ]
 
   schema "users" do
     field :state, :string
