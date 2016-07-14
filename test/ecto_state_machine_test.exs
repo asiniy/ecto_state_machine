@@ -17,72 +17,73 @@ defmodule EctoStateMachineTest do
   describe "events" do
     it "#confirm", context do
       changeset = Dummy.User.confirm(context[:unconfirmed_user])
+      assert changeset.valid?            == true
       assert changeset.changes.state     == "confirmed"
       assert Map.keys(changeset.changes) == ~w(confirmed_at state)a
 
-      assert_raise RuntimeError, "You can't move state from :confirmed to :confirmed", fn ->
-        Dummy.User.confirm(context[:confirmed_user])
-      end
+      changeset = Dummy.User.confirm(context[:confirmed_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :confirmed to :confirmed", []}]
 
-      assert_raise RuntimeError, "You can't move state from :blocked to :confirmed", fn ->
-        Dummy.User.confirm(context[:blocked_user])
-      end
+      changeset = Dummy.User.confirm(context[:blocked_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :blocked to :confirmed", []}]
 
-      assert_raise RuntimeError, "You can't move state from :admin to :confirmed", fn ->
-        Dummy.User.confirm(context[:admin])
-      end
+      changeset = Dummy.User.confirm(context[:admin])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :admin to :confirmed", []}]
     end
 
     it "#block", context do
+      changeset = Dummy.User.block(context[:unconfirmed_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :unconfirmed to :blocked", []}]
+
       changeset = Dummy.User.block(context[:confirmed_user])
+      assert changeset.valid?            == true
       assert changeset.changes.state     == "blocked"
-      assert Map.keys(changeset.changes) == ~w(state)a
+
+      changeset = Dummy.User.block(context[:blocked_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :blocked to :blocked", []}]
 
       changeset = Dummy.User.block(context[:admin])
+      assert changeset.valid?            == true
       assert changeset.changes.state     == "blocked"
-      assert Map.keys(changeset.changes) == ~w(state)a
-
-      assert_raise RuntimeError, "You can't move state from :unconfirmed to :blocked", fn ->
-        Dummy.User.block(context[:unconfirmed_user])
-      end
-
-      assert_raise RuntimeError, "You can't move state from :blocked to :blocked", fn ->
-        Dummy.User.block(context[:blocked_user])
-      end
     end
 
     it "#make_admin", context do
+      changeset = Dummy.User.make_admin(context[:unconfirmed_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :unconfirmed to :admin", []}]
+
       changeset = Dummy.User.make_admin(context[:confirmed_user])
+      assert changeset.valid?            == true
       assert changeset.changes.state     == "admin"
-      assert Map.keys(changeset.changes) == ~w(state)a
 
-      assert_raise RuntimeError, "You can't move state from :unconfirmed to :admin", fn ->
-        Dummy.User.make_admin(context[:unconfirmed_user])
-      end
+      changeset = Dummy.User.make_admin(context[:blocked_user])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :blocked to :admin", []}]
 
-      assert_raise RuntimeError, "You can't move state from :blocked to :admin", fn ->
-        Dummy.User.make_admin(context[:blocked_user])
-      end
-
-      assert_raise RuntimeError, "You can't move state from :admin to :admin", fn ->
-        Dummy.User.make_admin(context[:admin])
-      end
+      changeset = Dummy.User.make_admin(context[:admin])
+      assert changeset.valid? == false
+      assert changeset.errors == [state: {"You can't move state from :admin to :admin", []}]
     end
   end
 
   describe "can_?" do
     it "#can_confirm?", context do
-      assert Dummy.User.can_confirm?(context[:unconfirmed_user]) == true
-      assert Dummy.User.can_confirm?(context[:confirmed_user])   == false
-      assert Dummy.User.can_confirm?(context[:blocked_user])     == false
-      assert Dummy.User.can_confirm?(context[:admin])            == false
+      assert Dummy.User.can_confirm?(context[:unconfirmed_user])    == true
+      assert Dummy.User.can_confirm?(context[:confirmed_user])      == false
+      assert Dummy.User.can_confirm?(context[:blocked_user])        == false
+      assert Dummy.User.can_confirm?(context[:admin])               == false
     end
 
     it "#can_block?", context do
-      assert Dummy.User.can_block?(context[:unconfirmed_user]) == false
-      assert Dummy.User.can_block?(context[:confirmed_user])   == true
-      assert Dummy.User.can_block?(context[:blocked_user])     == false
-      assert Dummy.User.can_block?(context[:admin])            == true
+      assert Dummy.User.can_block?(context[:unconfirmed_user])      == false
+      assert Dummy.User.can_block?(context[:confirmed_user])        == true
+      assert Dummy.User.can_block?(context[:blocked_user])          == false
+      assert Dummy.User.can_block?(context[:admin])                 == true
     end
 
     it "#can_make_admin?", context do
