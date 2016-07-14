@@ -1,5 +1,7 @@
 # Ecto state machine
 
+![badge](https://img.shields.io/hexpm/v/ecto_state_machine.svg)
+
 This package allows to use [finite state machine pattern](https://en.wikipedia.org/wiki/Finite-state_machine) in Ecto. Specify:
 
 * states
