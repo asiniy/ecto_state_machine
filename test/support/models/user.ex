@@ -1,5 +1,5 @@
-defmodule Dummy.User do
-  use Dummy.Web, :model
+defmodule EctoStateMachine.User do
+  use Ecto.Schema
 
   use EctoStateMachine,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
