@@ -1,5 +1,6 @@
 # Ecto state machine
 
+![travis ci badge](https://travis-ci.org/asiniy/ecto_state_machine.svg)
 ![badge](https://img.shields.io/hexpm/v/ecto_state_machine.svg)
 
 This package allows to use [finite state machine pattern](https://en.wikipedia.org/wiki/Finite-state_machine) in Ecto. Specify:
@@ -80,7 +81,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 - [ ] Custom db column name
 - [x] Validation method for changeset indicates its value in the correct range
 - [ ] Initial value
-- [ ] CI
+- [x] CI
 - [x] Add status? methods
 - [ ] Introduce it at elixir-radar and my blog
 - [ ] Custom error messages for changeset
