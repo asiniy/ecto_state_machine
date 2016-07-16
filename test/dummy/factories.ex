@@ -3,7 +3,7 @@ defmodule Dummy.Factories do
 
   def user_factory do
     %Dummy.User{
-      state: "started",
+      state: "started"
     }
   end
 end
