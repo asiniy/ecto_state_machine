@@ -84,3 +84,4 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 - [x] Add status? methods
 - [ ] Introduce it at elixir-radar and my blog
 - [ ] Custom error messages for changeset
+- [ ] Rely on last versions of ecto & elixir
