@@ -10,7 +10,7 @@ defmodule EctoStateMachine do
       end)
 
     quote bind_quoted: [states: states, events: events] do
-      import Ecto.Changeset, only: [cast: 4, add_error: 3]
+      import Ecto.Changeset
 
       events
       |> Enum.each(fn(event) ->
