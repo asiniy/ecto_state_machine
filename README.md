@@ -35,7 +35,7 @@ defmodule Dummy.User do
     ]
 
   schema "users" do
-    field :state, :string
+    field :state, :string, default: "unconfirmed"
   end
 end
 ```
@@ -80,9 +80,10 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 - [x] Cover by tests
 - [ ] Custom db column name
 - [x] Validation method for changeset indicates its value in the correct range
-- [ ] Initial value
+- [x] Initial value
 - [x] CI
 - [x] Add status? methods
 - [ ] Introduce it at elixir-radar and my blog
-- [ ] Custom error messages for changeset
-- [ ] Rely on last versions of ecto & elixir
+- [ ] Custom error messages for changeset (with translations by gettext ability)
+- [x] Rely on last versions of ecto & elixir
+- [ ] Write dedicated module instead of requiring everything into the model
