@@ -7,10 +7,10 @@ defmodule EctoStateMachineTest do
   setup_all do
     {
       :ok,
-      unconfirmed_user: insert(:user, %{ state: "unconfirmed" }),
-      confirmed_user:   insert(:user, %{ state: "confirmed" }),
-      blocked_user:     insert(:user, %{ state: "blocked" }),
-      admin:            insert(:user, %{ state: "admin" })
+      unconfirmed_user: insert(:user, %{ rules: "unconfirmed" }),
+      confirmed_user:   insert(:user, %{ rules: "confirmed" }),
+      blocked_user:     insert(:user, %{ rules: "blocked" }),
+      admin:            insert(:user, %{ rules: "admin" })
     }
   end
 
@@ -18,56 +18,56 @@ defmodule EctoStateMachineTest do
     it "#confirm", context do
       changeset = Dummy.User.confirm(context[:unconfirmed_user])
       assert changeset.valid?            == true
-      assert changeset.changes.state     == "confirmed"
-      assert Map.keys(changeset.changes) == ~w(confirmed_at state)a
+      assert changeset.changes.rules     == "confirmed"
+      assert Map.keys(changeset.changes) == ~w(confirmed_at rules)a
 
       changeset = Dummy.User.confirm(context[:confirmed_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :confirmed to :confirmed", []}]
+      assert changeset.errors == [rules: {"You can't move state from :confirmed to :confirmed", []}]
 
       changeset = Dummy.User.confirm(context[:blocked_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :blocked to :confirmed", []}]
+      assert changeset.errors == [rules: {"You can't move state from :blocked to :confirmed", []}]
 
       changeset = Dummy.User.confirm(context[:admin])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :admin to :confirmed", []}]
+      assert changeset.errors == [rules: {"You can't move state from :admin to :confirmed", []}]
     end
 
     it "#block", context do
       changeset = Dummy.User.block(context[:unconfirmed_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :unconfirmed to :blocked", []}]
+      assert changeset.errors == [rules: {"You can't move state from :unconfirmed to :blocked", []}]
 
       changeset = Dummy.User.block(context[:confirmed_user])
       assert changeset.valid?            == true
-      assert changeset.changes.state     == "blocked"
+      assert changeset.changes.rules     == "blocked"
 
       changeset = Dummy.User.block(context[:blocked_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :blocked to :blocked", []}]
+      assert changeset.errors == [rules: {"You can't move state from :blocked to :blocked", []}]
 
       changeset = Dummy.User.block(context[:admin])
       assert changeset.valid?            == true
-      assert changeset.changes.state     == "blocked"
+      assert changeset.changes.rules     == "blocked"
     end
 
     it "#make_admin", context do
       changeset = Dummy.User.make_admin(context[:unconfirmed_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :unconfirmed to :admin", []}]
+      assert changeset.errors == [rules: {"You can't move state from :unconfirmed to :admin", []}]
 
       changeset = Dummy.User.make_admin(context[:confirmed_user])
       assert changeset.valid?            == true
-      assert changeset.changes.state     == "admin"
+      assert changeset.changes.rules     == "admin"
 
       changeset = Dummy.User.make_admin(context[:blocked_user])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :blocked to :admin", []}]
+      assert changeset.errors == [rules: {"You can't move state from :blocked to :admin", []}]
 
       changeset = Dummy.User.make_admin(context[:admin])
       assert changeset.valid? == false
-      assert changeset.errors == [state: {"You can't move state from :admin to :admin", []}]
+      assert changeset.errors == [rules: {"You can't move state from :admin to :admin", []}]
     end
   end
 

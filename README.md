@@ -7,7 +7,7 @@ This package allows to use [finite state machine pattern](https://en.wikipedia.o
 
 * states
 * events
-* transitions
+* column ([optional](#custom-column-name))
 
 and go:
 
@@ -65,6 +65,23 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
           [{:ecto_state_machine, "~> 0.1.0"}]
         end
 
+### Custom column name
+
+`ecto_state_machine` uses `state` database column by default. You can specify
+`column` option to change it. Like this:
+
+``` elixir
+defmodule Dummy.User do
+  use Dummy.Web, :model
+
+  use EctoStateMachine,
+    column: :rules,
+    # bla-bla-bla
+end
+```
+
+Now your state will be stored into `rules` column.
+
 ## Contributions
 
 1. Install dependencies `mix deps.get`
@@ -78,7 +95,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 ## Roadmap to 1.0
 
 - [x] Cover by tests
-- [ ] Custom db column name
+- [x] Custom db column name
 - [x] Validation method for changeset indicates its value in the correct range
 - [x] Initial value
 - [x] CI
