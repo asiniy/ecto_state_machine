@@ -1,5 +1,6 @@
 defmodule EctoStateMachine do
   defmacro __using__(opts) do
+    column = Keyword.get(opts, :column, "state")
     states = Keyword.get(opts, :states)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
@@ -9,8 +10,8 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [states: states, events: events] do
-      import Ecto.Changeset
+    quote bind_quoted: [states: states, events: events, column: column] do
+      alias Ecto.Changeset
 
       events
       |> Enum.each(fn(event) ->
@@ -20,22 +21,26 @@ defmodule EctoStateMachine do
 
         def unquote(event[:name])(model) do
           model
-          |> cast(%{ state: "#{unquote(event[:to])}" }, ~w(state), ~w())
+          |> Changeset.change(%{ unquote(column) => "#{unquote(event[:to])}" })
           |> unquote(event[:callback]).()
           |> validate_state_transition(unquote(event), model)
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do
-          :"#{model.state}" in unquote(event[:from])
+          :"#{Map.get(model, unquote(column))}" in unquote(event[:from])
         end
       end)
 
       defp validate_state_transition(changeset, event, model) do
-        if :"#{model.state}" in event[:from] do
+        change = Map.get(model, unquote(column))
+
+        if :"#{change}" in event[:from] do
           changeset
         else
           changeset
-          |> add_error(:state, "You can't move state from :#{model.state} to :#{event[:to]}")
+          |> Changeset.add_error(unquote(column),
+            "You can't move state from :#{change} to :#{event[:to]}"
+            )
         end
       end
     end

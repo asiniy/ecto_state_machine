@@ -2,6 +2,7 @@ defmodule Dummy.User do
   use Dummy.Web, :model
 
   use EctoStateMachine,
+    column: :rules,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
     events: [
       [
@@ -21,6 +22,6 @@ defmodule Dummy.User do
     ]
 
   schema "users" do
-    field :state, :string
+    field :rules, :string
   end
 end
