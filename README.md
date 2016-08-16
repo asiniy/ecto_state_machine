@@ -104,3 +104,4 @@ Now your state will be stored into `rules` column.
 - [ ] Custom error messages for changeset (with translations by gettext ability)
 - [x] Rely on last versions of ecto & elixir
 - [ ] Write dedicated module instead of requiring everything into the model
+- [ ] Write bang! methods which are raising exception instead of returning invalid changeset
