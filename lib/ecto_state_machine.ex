@@ -1,6 +1,6 @@
 defmodule EctoStateMachine do
   defmacro __using__(opts) do
-    column = Keyword.get(opts, :column, "state")
+    column = Keyword.get(opts, :column, :state)
     states = Keyword.get(opts, :states)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
