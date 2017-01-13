@@ -12,16 +12,16 @@ defmodule EctoStateMachine.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
-      deps: deps,
+      deps: deps(),
       source_url: @project_url,
       homepage_url: @project_url,
       description: "State machine pattern for Ecto. I tried to make it similar as possible to ruby's gem 'aasm'",
-      package: package
+      package: package()
    ]
   end
 
-  defp elixirc_paths(:test), do: elixirc_paths ++ ["test/support", "test/dummy"]
-  defp elixirc_paths(_),     do: elixirc_paths
+  defp elixirc_paths(:test), do: elixirc_paths() ++ ["test/support", "test/dummy"]
+  defp elixirc_paths(_),     do: elixirc_paths()
   defp elixirc_paths,        do: ["lib"]
 
   def application do
@@ -30,8 +30,8 @@ defmodule EctoStateMachine.Mixfile do
     ]
   end
 
-  def app_list(:test), do: app_list ++ [:ecto, :postgrex, :ex_machina]
-  def app_list(_), do: app_list
+  def app_list(:test), do: app_list() ++ [:ecto, :postgrex, :ex_machina]
+  def app_list(_), do: app_list()
   def app_list, do: [:logger]
 
   defp deps do
