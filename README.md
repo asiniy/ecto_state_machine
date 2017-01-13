@@ -12,8 +12,8 @@ This package allows to use [finite state machine pattern](https://en.wikipedia.o
 and go:
 
 ``` elixir
-defmodule Dummy.User do
-  use Dummy.Web, :model
+defmodule User do
+  use Web, :model
 
   use EctoStateMachine,
     states: [:unconfirmed, :confirmed, :blocked, :admin],
@@ -40,17 +40,27 @@ defmodule Dummy.User do
 end
 ```
 
-now you can run:
+now you can do:
 
 ``` elixir
-user     = Dummy.Repo.get_by(Dummy.User, id: 1)
+user = Repo.get_by(User, id: 1)
 
-confirmed_user = Dummy.User.confirm(user)     # => transition user state to "confirmed". We can make him admin!
-Dummy.User.can_confirm?(confirmed_user)       # => false
-Dummy.User.can_make_admin?(confirmed_user)    # => true
-admin = Dummy.User.make_admin(confirmed_user) # => transition user state to "admin"
+# Create changeset transition user state to "confirmed". We can make him admin!
+confirmed_user = User.confirm(user)     # =>
 
-Dummy.Repo.update(admin)                      # => store user to the database
+# We can validate ability to change user's state
+User.can_confirm?(confirmed_user)       # => false
+User.can_make_admin?(confirmed_user)    # => true
+
+# Create changeset transition user state to "admin"
+admin = User.make_admin(confirmed_user)
+
+# Store changeset to the database
+Repo.update(admin)                      
+
+
+# List all possible user states
+User.states # => [:unconfirmed, :confirmed, :blocked, :admin]
 ```
 
 You can check out whole `test/dummy` directory to inspect how to organize sample app.

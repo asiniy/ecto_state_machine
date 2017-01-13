@@ -1,7 +1,7 @@
 defmodule EctoStateMachine do
   defmacro __using__(opts) do
     column = Keyword.get(opts, :column, :state)
-    states = Keyword.get(opts, :states)
+    sm_states = Keyword.get(opts, :states)
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
         Keyword.put_new(event, :callback, quote do: fn(model) -> model end)
@@ -10,13 +10,17 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [states: states, events: events, column: column] do
+    quote bind_quoted: [sm_states: sm_states, events: events, column: column] do
       alias Ecto.Changeset
+
+      def states do
+        unquote(sm_states)
+      end
 
       events
       |> Enum.each(fn(event) ->
-        unless event[:to] in states do
-          raise "Target state :#{event[:to]} is not present in @states"
+        unless event[:to] in sm_states do
+          raise "Target state :#{event[:to]} is not present in ecto_state_machine definition states"
         end
 
         def unquote(event[:name])(model) do
