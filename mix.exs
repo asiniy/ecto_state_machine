@@ -2,7 +2,7 @@ defmodule EctoStateMachine.Mixfile do
   use Mix.Project
 
   @project_url "https://github.com/asiniy/ecto_state_machine"
-  @version     "0.2.0"
+  @version     "0.2.1"
 
   def project do
     [
