@@ -25,6 +25,10 @@ defmodule EctoStateMachine do
         unquote(sm_states)
       end
 
+      def unquote(:"#{function_prefix}events")() do
+        unquote(events) |> Enum.map(fn(x) -> x[:name] end)
+      end
+
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in sm_states do
