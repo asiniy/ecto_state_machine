@@ -98,4 +98,8 @@ defmodule EctoStateMachineTest do
   test "#states" do
     assert User.rules_states == [:unconfirmed, :confirmed, :blocked, :admin]
   end
+
+  test "#events" do
+    assert User.rules_events == [:confirm, :block, :make_admin]
+  end
 end

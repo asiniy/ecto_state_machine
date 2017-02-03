@@ -59,10 +59,15 @@ admin = User.make_admin(confirmed_user)
 Repo.update(admin)                      
 
 
-# List all possible user states
-# If column isn't `:state`, function will be prefixed. IE,
-# for column `:rules` funnction name will be `rules_states`
+# List all possible states
+# If column isn't `:state`, function name will be prefixed. IE,
+# for column `:rules` function name will be `rules_states`
 User.states # => [:unconfirmed, :confirmed, :blocked, :admin]
+
+# List all possible events
+# If column isn't `:state`, function name will be prefixed. IE,
+# for column `:rules` function name will be `rules_events`
+User.events # => [:confirm, :block, :make_admin]
 ```
 
 You can check out whole `test/dummy` directory to inspect how to organize sample app.
