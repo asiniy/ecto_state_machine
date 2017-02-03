@@ -60,6 +60,8 @@ Repo.update(admin)
 
 
 # List all possible user states
+# If column isn't `:state`, function will be prefixed. IE,
+# for column `:rules` funnction name will be `rules_states`
 User.states # => [:unconfirmed, :confirmed, :blocked, :admin]
 ```
 

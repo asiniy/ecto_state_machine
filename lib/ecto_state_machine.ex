@@ -10,10 +10,18 @@ defmodule EctoStateMachine do
         Keyword.update!(event, :callback, &Macro.escape/1)
       end)
 
-    quote bind_quoted: [sm_states: sm_states, events: events, column: column] do
+    function_prefix = if column == :state, do: nil, else: "#{column}_"
+
+    quote bind_quoted: [
+      sm_states: sm_states,
+      events: events,
+      column: column,
+      function_prefix: function_prefix
+    ] do
+
       alias Ecto.Changeset
 
-      def states do
+      def unquote(:"#{function_prefix}states")() do
         unquote(sm_states)
       end
 
