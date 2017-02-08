@@ -82,7 +82,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
           [{:ecto_state_machine, "~> 0.1.0"}]
         end
 
-### Custom column name
+## Custom column name
 
 `ecto_state_machine` uses `state` database column by default. You can specify
 `column` option to change it. Like this:
@@ -98,6 +98,12 @@ end
 ```
 
 Now your state will be stored into `rules` column.
+
+## About [Brutalist](https://brutalist.press)
+
+[![Brutalist](https://github.com/asiniy/ecto_state_machine/blob/master/brutalist_logo.png)](https://brutalist.press)
+
+`ecto_state_machine` package is maintained and funded by folks from [Brutalist](https://brutalist.press) - media platform for writing and sharing news and stories with strong focus on traditional values, think-tank level analytics and political research.
 
 ## Contributions
 
