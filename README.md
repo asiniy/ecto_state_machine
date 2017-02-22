@@ -42,7 +42,7 @@ end
 
 now you can do:
 
-``` elixir
+```elixir
 user = Repo.get_by(User, id: 1)
 
 # Create changeset transition user state to "confirmed". We can make him admin!
@@ -68,6 +68,17 @@ User.states # => [:unconfirmed, :confirmed, :blocked, :admin]
 # If column isn't `:state`, function name will be prefixed. IE,
 # for column `:rules` function name will be `rules_events`
 User.events # => [:confirm, :block, :make_admin]
+
+# If you don't know ahead of time which new state you will get, you can use the ecto validation
+def changeset(struct, params \\ %{}) do
+  struct |> cast(params, [:state]) |> validate_required([:state])
+         |> ... etc ...
+         |> validate_state_change
+end
+# ... or ...
+user |> Ecto.Changeset.change(%{state: "blocked"}) |> User.validate_state_change 
+# If for example your column is `:rules`, then the function will be `validate_rules_change`
+
 ```
 
 You can check out whole `test/dummy` directory to inspect how to organize sample app.
