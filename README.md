@@ -101,7 +101,13 @@ Now your state will be stored into `rules` column.
 
 ## About [Brutalist](https://brutalist.press)
 
-[![Brutalist](https://github.com/asiniy/ecto_state_machine/blob/master/brutalist_logo.png)](https://brutalist.press)
+<a href="https://brutalist.press">
+  <img src="https://github.com/asiniy/ecto_state_machine/blob/master/brutalist_logo.png"
+  width="400"
+  height="106"
+  alt="Brutalist">
+</a>
+<br /><br />
 
 `ecto_state_machine` package is maintained and funded by folks from [Brutalist](https://brutalist.press) - media platform for writing and sharing news and stories with strong focus on traditional values, think-tank level analytics and political research.
 
