@@ -95,6 +95,65 @@ defmodule EctoStateMachineTest do
     end
   end
 
+  describe "#validate_rules_change" do
+    test "valid state change", context do
+      valid_transitions = [
+        unconfirmed_user: "confirmed",
+        confirmed_user:   "blocked",
+        confirmed_user:   "admin",
+        admin:            "blocked",
+      ]
+
+      valid_transitions |> Enum.each(fn {ctx, to} ->
+        changeset = context[ctx] |> Ecto.Changeset.change(%{rules: to})
+                    |> User.validate_rules_change
+        assert changeset.valid? == true
+      end)
+    end
+
+    test "invalid state change", context do
+      invalid_transitions = [
+        unconfirmed_user: {"unconfirmed", "blocked"},
+        unconfirmed_user: {"unconfirmed", "admin"},
+        confirmed_user:   {"confirmed",   "unconfirmed"},
+        blocked_user:     {"blocked",     "confirmed"},
+        blocked_user:     {"blocked",     "admin"},
+        blocked_user:     {"blocked",     "confirmed"},
+        blocked_user:     {"blocked",     "unconfirmed"},
+        admin:            {"admin",       "confirmed"},
+        admin:            {"admin",       "unconfirmed"},
+      ]
+
+      invalid_transitions |> Enum.each(fn {ctx, {from, to}} ->
+        changeset = context[ctx] |> Ecto.Changeset.change(%{rules: to})
+                                 |> User.validate_rules_change
+        assert changeset.valid? == false
+        assert changeset.errors == [rules: {"You can't move state from :#{from} to :#{to}", []}]
+      end)
+    end
+
+    test "changeset with the same state", context do
+      no_change_users = [
+        unconfirmed_user: "unconfirmed",
+        confirmed_user:   "confirmed",
+        blocked_user:     "blocked",
+        admin:            "admin",
+      ]
+
+      no_change_users |> Enum.each(fn {ctx, to} ->
+        changeset = context[ctx] |> Ecto.Changeset.change(%{state: to})
+                                 |> User.validate_rules_change
+        assert changeset.valid? == true
+      end)
+    end
+
+    test "changeset without a state change in the changeset" do
+      changeset = %User{} |> Ecto.Changeset.change(%{other: "attribute"})
+                          |> User.validate_rules_change
+      assert changeset.valid? == true
+    end
+  end
+
   test "#states" do
     assert User.rules_states == [:unconfirmed, :confirmed, :blocked, :admin]
   end

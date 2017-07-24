@@ -29,6 +29,20 @@ defmodule EctoStateMachine do
         unquote(events) |> Enum.map(fn(x) -> x[:name] end)
       end
 
+      def unquote(:"validate_#{column}_change")(changeset) do
+        current = changeset.data    |> Map.get(unquote(column))
+
+        with {:ok, desired} <- changeset.changes |> Map.fetch(unquote(column)),
+             false <- unquote(events) |> Enum.any?(fn(event) ->
+                        event[:to] == :"#{desired}" && :"#{current}" in event[:from]
+                      end)
+        do
+          changeset |> Changeset.add_error(unquote(column), "You can't move state from :#{current} to :#{desired}" )
+        else
+          _ -> changeset
+        end
+      end
+
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in sm_states do
