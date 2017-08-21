@@ -29,6 +29,32 @@ defmodule EctoStateMachine do
         unquote(events) |> Enum.map(fn(x) -> x[:name] end)
       end
 
+      def unquote(:"available_events")(model) do
+        current_state = Map.get(model, unquote(column))
+
+        unquote(events)
+        |> Enum.filter(fn(event) ->
+            Enum.member?(event[:from], String.to_atom(current_state))
+          end)
+        |> Enum.map(fn(event) ->
+            event[:name]
+          end)
+      end
+
+      def unquote(:"get_event_to")(event) do
+        unquote(events)
+        |> Enum.find(
+           fn(e) ->
+             e[:name] == event
+           end)
+        |> case do
+          nil ->
+            nil
+          event ->
+            event[:to]
+        end
+      end
+
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in sm_states do
