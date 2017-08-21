@@ -41,6 +41,20 @@ defmodule EctoStateMachine do
           end)
       end
 
+      def unquote(:"get_event_to")(event) do
+        unquote(events)
+        |> Enum.find(
+           fn(e) ->
+             e[:name] == event
+           end)
+        |> case do
+          nil ->
+            nil
+          event ->
+            event[:to]
+        end
+      end
+
       events
       |> Enum.each(fn(event) ->
         unless event[:to] in sm_states do
