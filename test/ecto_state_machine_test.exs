@@ -102,4 +102,11 @@ defmodule EctoStateMachineTest do
   test "#events" do
     assert User.rules_events == [:confirm, :block, :make_admin]
   end
+
+  test "#available_events", context do
+     assert User.available_events(context[:unconfirmed_user]) == [:confirm]
+     assert User.available_events(context[:confirmed_user]) == [:block, :make_admin]
+     assert User.available_events(context[:blocked_user]) == []
+     assert User.available_events(context[:admin]) == [:block]
+   end
 end
