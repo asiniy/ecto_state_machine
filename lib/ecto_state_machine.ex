@@ -51,12 +51,14 @@ defmodule EctoStateMachine do
         change = Map.get(model, unquote(column))
 
         if :"#{change}" in event[:from] do
-          changeset
+          {:ok, changeset}
         else
-          changeset
-          |> Changeset.add_error(unquote(column),
-            "You can't move state from :#{change} to :#{event[:to]}"
-            )
+          with_error = 
+            changeset
+            |> Changeset.add_error(unquote(column),
+              "You can't move state from :#{change} to :#{event[:to]}"
+              )
+          {:error, with_error}
         end
       end
     end
