@@ -17,56 +17,56 @@ defmodule EctoStateMachineTest do
 
   describe "events" do
     test "#confirm", context do
-      changeset = User.confirm(context[:unconfirmed_user])
+      {:ok, changeset} = User.confirm(context[:unconfirmed_user])
       assert changeset.valid?            == true
       assert changeset.changes.rules     == "confirmed"
       assert Map.keys(changeset.changes) == ~w(confirmed_at rules)a
 
-      changeset = User.confirm(context[:confirmed_user])
+      {:error, changeset} = User.confirm(context[:confirmed_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :confirmed to :confirmed", []}]
 
-      changeset = User.confirm(context[:blocked_user])
+      {:error, changeset} = User.confirm(context[:blocked_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :blocked to :confirmed", []}]
 
-      changeset = User.confirm(context[:admin])
+      {:error, changeset} = User.confirm(context[:admin])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :admin to :confirmed", []}]
     end
 
     test "#block", context do
-      changeset = User.block(context[:unconfirmed_user])
+      {:error, changeset} = User.block(context[:unconfirmed_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :unconfirmed to :blocked", []}]
 
-      changeset = User.block(context[:confirmed_user])
+      {:ok, changeset} = User.block(context[:confirmed_user])
       assert changeset.valid?            == true
       assert changeset.changes.rules     == "blocked"
 
-      changeset = User.block(context[:blocked_user])
+      {:error, changeset} = User.block(context[:blocked_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :blocked to :blocked", []}]
 
-      changeset = User.block(context[:admin])
+      {:ok, changeset} = User.block(context[:admin])
       assert changeset.valid?            == true
       assert changeset.changes.rules     == "blocked"
     end
 
     test "#make_admin", context do
-      changeset = User.make_admin(context[:unconfirmed_user])
+      {:error, changeset} = User.make_admin(context[:unconfirmed_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :unconfirmed to :admin", []}]
 
-      changeset = User.make_admin(context[:confirmed_user])
+      {:ok, changeset} = User.make_admin(context[:confirmed_user])
       assert changeset.valid?            == true
       assert changeset.changes.rules     == "admin"
 
-      changeset = User.make_admin(context[:blocked_user])
+      {:error, changeset} = User.make_admin(context[:blocked_user])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :blocked to :admin", []}]
 
-      changeset = User.make_admin(context[:admin])
+      {:error, changeset} = User.make_admin(context[:admin])
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :admin to :admin", []}]
     end
