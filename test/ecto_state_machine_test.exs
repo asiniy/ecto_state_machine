@@ -70,6 +70,14 @@ defmodule EctoStateMachineTest do
       assert changeset.valid? == false
       assert changeset.errors == [rules: {"You can't move state from :admin to :admin", []}]
     end
+
+    test "on a changeset", context do
+      preceding_changeset = Ecto.Changeset.change(context[:unconfirmed_user])
+      changeset = User.confirm(preceding_changeset)
+      assert changeset.valid?            == true
+      assert changeset.changes.rules     == "confirmed"
+      assert Map.keys(changeset.changes) == ~w(confirmed_at rules)a
+    end
   end
 
   describe "can_?" do

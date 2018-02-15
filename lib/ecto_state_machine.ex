@@ -47,6 +47,10 @@ defmodule EctoStateMachine do
         end
       end)
 
+      defp validate_state_transition(changeset, event, %Changeset{data: model}) do
+        validate_state_transition(changeset, event, model)
+      end
+
       defp validate_state_transition(changeset, event, model) do
         change = Map.get(model, unquote(column))
 
