@@ -6,4 +6,10 @@ defmodule Dummy.Factories do
       rules: "started"
     }
   end
+
+  def writing_style_factory do
+    %Dummy.WritingStyle{
+      state: nil
+    }
+  end
 end

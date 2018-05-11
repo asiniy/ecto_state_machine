@@ -56,7 +56,7 @@ User.can_make_admin?(confirmed_user)    # => true
 admin = User.make_admin(confirmed_user)
 
 # Store changeset to the database
-Repo.update(admin)                      
+Repo.update(admin)
 
 
 # List all possible states
@@ -98,6 +98,43 @@ end
 ```
 
 Now your state will be stored into `rules` column.
+
+### Custom mapping between state name and field value
+
+By default, the atomic state names are stringified when generating the changeset. However, there are situations where the underlying Ecto schema value isn't simply a stringified version of the state name. You can customize the mapping by passing cast/load functions like so:
+
+```elixir
+defmodule Dummy.WritingStyle do
+  use Dummy.Web, :model
+
+  use EctoStateMachine,
+    states: [:upcased, :camel_cased],
+    cast_fn: fn
+      :upcased -> "UPCASED"
+      :camel_cased -> "camelCased"
+    end,
+    load_fn: fn
+      "UPCASED" -> :upcased
+      "camelCased" -> :camel_cased
+    end,
+    events: [
+      [
+        name: :upcase,
+        from: [:camel_cased],
+        to: :upcased
+      ],
+      [
+        name: :camel_case,
+        from: [:upcased],
+        to: :camel_cased
+      ]
+    ]
+
+  schema "writing_styles" do
+    field :state, :string
+  end
+end
+```
 
 ## Contributions
 
