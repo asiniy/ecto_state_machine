@@ -2,6 +2,17 @@ defmodule EctoStateMachine do
   defmacro __using__(opts) do
     column = Keyword.get(opts, :column, :state)
     sm_states = Keyword.get(opts, :states)
+
+    cast_fn =
+      opts
+      |> Keyword.get(:cast_fn, quote do: &("#{&1}"))
+      |> Macro.escape()
+
+    load_fn =
+      opts
+      |> Keyword.get(:load_fn, quote do: &(:"#{&1}"))
+      |> Macro.escape()
+
     events = Keyword.get(opts, :events)
       |> Enum.map(fn(event) ->
         Keyword.put_new(event, :callback, quote do: fn(model) -> model end)
@@ -16,7 +27,9 @@ defmodule EctoStateMachine do
       sm_states: sm_states,
       events: events,
       column: column,
-      function_prefix: function_prefix
+      function_prefix: function_prefix,
+      cast_fn: cast_fn,
+      load_fn: load_fn
     ] do
 
       alias Ecto.Changeset
@@ -36,26 +49,36 @@ defmodule EctoStateMachine do
         end
 
         def unquote(event[:name])(model) do
+          casted = unquote(cast_fn).(unquote(event[:to]))
+
           model
-          |> Changeset.change(%{ unquote(column) => "#{unquote(event[:to])}" })
+          |> Changeset.change(%{ unquote(column) => casted })
           |> unquote(event[:callback]).()
           |> validate_state_transition(unquote(event), model)
         end
 
         def unquote(:"can_#{event[:name]}?")(model) do
-          :"#{Map.get(model, unquote(column))}" in unquote(event[:from])
+          loaded =
+            model
+            |> Map.get(unquote(column))
+            |> unquote(load_fn).()
+
+          loaded in unquote(event[:from])
         end
       end)
 
       defp validate_state_transition(changeset, event, model) do
-        change = Map.get(model, unquote(column))
+        loaded =
+          model
+          |> Map.get(unquote(column))
+          |> unquote(load_fn).()
 
-        if :"#{change}" in event[:from] do
+        if loaded in event[:from] do
           changeset
         else
           changeset
           |> Changeset.add_error(unquote(column),
-            "You can't move state from :#{change} to :#{event[:to]}"
+            "You can't move state from :#{loaded} to :#{event[:to]}"
             )
         end
       end
