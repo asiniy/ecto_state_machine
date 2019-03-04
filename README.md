@@ -74,13 +74,15 @@ You can check out whole `test/dummy` directory to inspect how to organize sample
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+Add `ecto_state_machine` to your list of dependencies in `mix.exs`:
 
-  1. Add ecto_state_machine to your list of dependencies in `mix.exs`:
-
-        def deps do
-          [{:ecto_state_machine, "~> 0.1.0"}]
-        end
+```elixir
+def deps do
+  [
+    {:ecto_state_machine, "~> 0.1.0"}
+  ]
+end
+```
 
 ### Custom column name
 
