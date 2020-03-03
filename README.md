@@ -1,7 +1,7 @@
 # Ecto state machine
 
-![travis ci badge](https://travis-ci.org/asiniy/ecto_state_machine.svg)
-![badge](https://img.shields.io/hexpm/v/ecto_state_machine.svg)
+[![travis ci badge](https://travis-ci.org/asiniy/ecto_state_machine.svg)](https://travis-ci.org/asiniy/ecto_state_machine)
+[![badge](https://img.shields.io/hexpm/v/ecto_state_machine.svg)](https://hex.pm/packages/ecto_state_machine)
 
 This package allows to use [finite state machine pattern](https://en.wikipedia.org/wiki/Finite-state_machine) in Ecto. Specify:
 
